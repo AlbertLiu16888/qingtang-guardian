@@ -5,6 +5,7 @@
 export const MONSTERS = [
   {
     id: "M01",
+    image: "assets/monsters/m01_shadow_bug.png",
     name: "暗影小蟲",
     type: "minion",
     element: "暗",
@@ -25,6 +26,7 @@ export const MONSTERS = [
   },
   {
     id: "M02",
+    image: "assets/monsters/m02_shadow_spider.png",
     name: "暗影蜘蛛",
     type: "elite",
     element: "暗",
@@ -47,6 +49,7 @@ export const MONSTERS = [
   },
   {
     id: "M03",
+    image: "assets/monsters/m03_shadow_raven.png",
     name: "暗影烏鴉群",
     type: "elite",
     element: "暗/風",
@@ -70,6 +73,7 @@ export const MONSTERS = [
   },
   {
     id: "M04",
+    image: "assets/monsters/m04_shadow_mole_king.png",
     name: "暗影地鼠王",
     type: "boss",
     element: "暗/地",
@@ -95,6 +99,7 @@ export const MONSTERS = [
   },
   {
     id: "M05",
+    image: "assets/monsters/m05_shadow_jellyfish.png",
     name: "暗影水母",
     type: "elite",
     element: "暗/水",
@@ -118,6 +123,7 @@ export const MONSTERS = [
   },
   {
     id: "M06",
+    image: "assets/monsters/m06_shadow_storm.png",
     name: "暗影風暴獸",
     type: "boss",
     element: "暗/風",
@@ -143,6 +149,7 @@ export const MONSTERS = [
   },
   {
     id: "M07",
+    image: "assets/monsters/m07_shadow_lotus.png",
     name: "暗影蓮妖",
     type: "elite",
     element: "暗/水",
@@ -166,6 +173,7 @@ export const MONSTERS = [
   },
   {
     id: "M08",
+    image: "assets/monsters/m08_shadow_illusionist.png",
     name: "暗影幻影師",
     type: "boss",
     element: "暗/光",
@@ -191,6 +199,7 @@ export const MONSTERS = [
   },
   {
     id: "M09",
+    image: "assets/monsters/m09_shadow_mist.png",
     name: "暗影迷霧獸",
     type: "elite",
     element: "暗",
@@ -214,6 +223,7 @@ export const MONSTERS = [
   },
   {
     id: "M10",
+    image: "assets/monsters/m10_shadow_serpent.png",
     name: "暗影巨蛇",
     type: "worldboss",
     element: "暗/水",
@@ -241,6 +251,7 @@ export const MONSTERS = [
   },
   {
     id: "M11",
+    image: "assets/monsters/m11_shadow_sludge.png",
     name: "暗影汙泥怪",
     type: "elite",
     element: "暗/地",
@@ -264,6 +275,7 @@ export const MONSTERS = [
   },
   {
     id: "M12",
+    image: "assets/monsters/m12_shadow_bats.png",
     name: "暗影蝙蝠群",
     type: "elite",
     element: "暗/風",
@@ -287,6 +299,7 @@ export const MONSTERS = [
   },
   {
     id: "M13",
+    image: "assets/monsters/m13_shadow_colorblind.png",
     name: "暗影色盲獸",
     type: "boss",
     element: "暗/光",
@@ -314,6 +327,7 @@ export const MONSTERS = [
   },
   {
     id: "M14",
+    image: "assets/monsters/m14_shadow_rustbug.png",
     name: "暗影鏽蝕蟲",
     type: "elite",
     element: "暗/地",
@@ -337,6 +351,7 @@ export const MONSTERS = [
   },
   {
     id: "M15",
+    image: "assets/monsters/m15_abyss_overlord.png",
     name: "湖底深淵領主",
     type: "hidden",
     element: "暗",

@@ -307,12 +307,20 @@ class BattleManager {
     const el = (id) => document.getElementById(id);
     el('enemy-name').textContent = this.enemy.name;
     el('enemy-level').textContent = `Lv.${this.enemy.level}`;
-    el('enemy-sprite').textContent = this.enemy.sprite;
+    if (this.enemy.image) {
+      el('enemy-sprite').innerHTML = `<img src="${this.enemy.image}" alt="${this.enemy.name}" style="width:100%;height:100%;object-fit:contain;">`;
+    } else {
+      el('enemy-sprite').textContent = this.enemy.sprite;
+    }
     el('enemy-hp-fill').style.width = `${(this.enemyHp / this.enemyMaxHp * 100)}%`;
 
     // 玩家動物
     if (this.animal) {
-      el('player-animal-sprite').textContent = this.animal.sprite;
+      if (this.animal.image) {
+        el('player-animal-sprite').innerHTML = `<img src="${this.animal.image}" alt="${this.animal.name}" style="width:100%;height:100%;object-fit:contain;">`;
+      } else {
+        el('player-animal-sprite').textContent = this.animal.sprite;
+      }
       el('player-animal-name').textContent = this.animal.name;
     }
     el('player-animal-hp-fill').style.width = `${(this.animalHp / this.animalMaxHp * 100)}%`;

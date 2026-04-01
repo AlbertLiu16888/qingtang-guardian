@@ -888,6 +888,20 @@ input, textarea, select {
   margin: 16px 0;
   filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.3));
   animation: enemyFloat 3s ease-in-out infinite;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle, #1e0a28 0%, #0a0a1a 80%);
+}
+
+.battle-enemy-sprite img {
+  max-width: 110%;
+  max-height: 110%;
+  object-fit: contain;
 }
 
 @keyframes enemyFloat {
@@ -908,6 +922,20 @@ input, textarea, select {
 .battle-player-sprite {
   font-size: 3.5rem;
   filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.3));
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle, #0a1428 0%, #0a0a1a 80%);
+}
+
+.battle-player-sprite img {
+  max-width: 110%;
+  max-height: 110%;
+  object-fit: contain;
 }
 
 .battle-player-info {

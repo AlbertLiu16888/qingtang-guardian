@@ -3,7 +3,7 @@
  * Cache-first for static assets, network-first for API calls, offline fallback.
  */
 
-const CACHE_VERSION = 'qingtang-v1';
+const CACHE_VERSION = 'qingtang-v2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 

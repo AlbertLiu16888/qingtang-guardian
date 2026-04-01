@@ -5,6 +5,7 @@
 export const ANIMALS = [
   {
     id: "A01",
+    image: "assets/animals/a01_egret.png",
     name: "白鷺鷥",
     title: "希望",
     element: "光",
@@ -30,6 +31,7 @@ export const ANIMALS = [
   },
   {
     id: "A02",
+    image: "assets/animals/a02_grebe.png",
     name: "小鸊鷉",
     title: "祝福",
     element: "水",
@@ -55,6 +57,7 @@ export const ANIMALS = [
   },
   {
     id: "A03",
+    image: "assets/animals/a03_mallard.png",
     name: "綠頭鴨",
     title: "旅行",
     element: "風",
@@ -80,6 +83,7 @@ export const ANIMALS = [
   },
   {
     id: "A04",
+    image: "assets/animals/a04_turtle.png",
     name: "烏龜爺爺",
     title: "智慧",
     element: "地",
@@ -105,6 +109,7 @@ export const ANIMALS = [
   },
   {
     id: "A05",
+    image: "assets/animals/a05_squirrel.png",
     name: "松鼠",
     title: "情報",
     element: "無",
@@ -130,6 +135,7 @@ export const ANIMALS = [
   },
   {
     id: "A06",
+    image: "assets/animals/a06_koi.png",
     name: "錦鯉",
     title: "繁榮",
     element: "水",
@@ -155,6 +161,7 @@ export const ANIMALS = [
   },
   {
     id: "A07",
+    image: "assets/animals/a07_butterfly.png",
     name: "蝴蝶",
     title: "自由",
     element: "風",
@@ -180,6 +187,7 @@ export const ANIMALS = [
   },
   {
     id: "A08",
+    image: "assets/animals/a08_frog.png",
     name: "青蛙",
     title: "歌聲",
     element: "水",
@@ -205,6 +213,7 @@ export const ANIMALS = [
   },
   {
     id: "A09",
+    image: "assets/animals/a09_dragonfly.png",
     name: "蜻蜓",
     title: "巡邏",
     element: "風",
@@ -230,6 +239,7 @@ export const ANIMALS = [
   },
   {
     id: "A10",
+    image: "assets/animals/a10_firefly.png",
     name: "螢火蟲",
     title: "光芒",
     element: "光",
@@ -255,6 +265,7 @@ export const ANIMALS = [
   },
   {
     id: "A11",
+    image: "assets/animals/a11_fishschool.png",
     name: "小魚群",
     title: "團結",
     element: "水",
@@ -280,6 +291,7 @@ export const ANIMALS = [
   },
   {
     id: "A12",
+    image: "assets/animals/a12_eagle.png",
     name: "老鷹",
     title: "視野",
     element: "風",
@@ -305,6 +317,7 @@ export const ANIMALS = [
   },
   {
     id: "A13",
+    image: "assets/animals/a13_rainbow_bird.png",
     name: "彩虹鳥",
     title: "創意",
     element: "光",
@@ -330,6 +343,7 @@ export const ANIMALS = [
   },
   {
     id: "A14",
+    image: "assets/animals/a14_otter.png",
     name: "水獺",
     title: "玩耍",
     element: "水",

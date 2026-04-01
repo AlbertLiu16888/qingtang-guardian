@@ -118,7 +118,7 @@ function renderCodexAnimals() {
     const owned = player.data.animals.includes(animal.id);
     return `
       <div class="codex-card ${unlocked ? '' : 'locked'} ${owned ? 'owned' : ''}" data-id="${animal.id}" data-type="animal">
-        <div class="codex-sprite">${unlocked ? animal.sprite : '❓'}</div>
+        <div class="codex-sprite">${unlocked ? (animal.image ? `<img src="${animal.image}" alt="${animal.name}" style="width:100%;height:100%;object-fit:contain;">` : animal.sprite) : '❓'}</div>
         <div class="codex-name">${unlocked ? animal.name : '???'}</div>
         <div class="codex-rarity rarity-${animal.rarity}">${unlocked ? animal.rarity : ''}</div>
         ${owned ? '<div class="codex-badge">擁有</div>' : ''}
@@ -139,7 +139,12 @@ function showAnimalDetail(animalId) {
   const animal = ANIMALS.find(a => a.id === animalId);
   if (!animal) return;
 
-  document.getElementById('animal-detail-sprite').textContent = animal.sprite;
+  const detailSprite = document.getElementById('animal-detail-sprite');
+  if (animal.image) {
+    detailSprite.innerHTML = `<img src="${animal.image}" alt="${animal.name}" style="width:100%;height:100%;object-fit:contain;">`;
+  } else {
+    detailSprite.textContent = animal.sprite;
+  }
   document.getElementById('animal-detail-name').textContent = `${animal.name}・${animal.title}`;
 
   const rarityEl = document.getElementById('animal-detail-rarity');
@@ -195,7 +200,7 @@ function renderCodexMonsters() {
     const unlocked = player.data.codex.monsters.includes(m.id);
     return `
       <div class="codex-card ${unlocked ? '' : 'locked'}">
-        <div class="codex-sprite">${unlocked ? m.sprite : '❓'}</div>
+        <div class="codex-sprite">${unlocked ? (m.image ? `<img src="${m.image}" alt="${m.name}" style="width:100%;height:100%;object-fit:contain;">` : m.sprite) : '❓'}</div>
         <div class="codex-name">${unlocked ? m.name : '???'}</div>
         <div class="codex-type">${unlocked ? m.type : ''}</div>
       </div>
@@ -386,7 +391,7 @@ export function renderProfile() {
       const isActive = d.activeAnimal === id;
       return `
         <div class="team-animal ${isActive ? 'active' : ''}">
-          <span class="team-sprite">${animal.sprite}</span>
+          <span class="team-sprite">${animal.image ? `<img src="${animal.image}" alt="${animal.name}" style="width:100%;height:100%;object-fit:contain;">` : animal.sprite}</span>
           <span class="team-name">${animal.name}</span>
           ${isActive ? '<span class="team-badge">主力</span>' : ''}
         </div>
