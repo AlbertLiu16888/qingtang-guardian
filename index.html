@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>青塘園守護者：光明之戰</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0a1a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="青塘園守護者：光明之戰 - 在真實的青塘園中展開你的冒險旅程">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============================================ -->
+  <!-- SPLASH SCREEN                                -->
+  <!-- ============================================ -->
+  <div id="screen-splash" class="screen active">
+    <div class="splash-bg">
+      <div class="splash-particles"></div>
+    </div>
+    <div class="splash-content">
+      <div class="splash-logo">
+        <div class="splash-logo-icon">🛡️</div>
+        <h1 class="splash-title">青塘園守護者</h1>
+        <p class="splash-subtitle">光明之戰</p>
+      </div>
+      <div class="splash-actions">
+        <button id="btn-start" class="btn btn-primary btn-lg btn-glow">開始冒險</button>
+        <button id="btn-continue" class="btn btn-secondary btn-lg hidden">繼續遊戲</button>
+      </div>
+      <p class="splash-version">v1.0.0</p>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- STORY INTRO SCREEN                           -->
+  <!-- ============================================ -->
+  <div id="screen-story" class="screen">
+    <div class="story-bg"></div>
+    <div class="story-content">
+      <div id="story-text" class="story-text">
+        <p class="typewriter"></p>
+      </div>
+      <div class="story-controls">
+        <button id="btn-story-skip" class="btn btn-ghost">跳過 ›</button>
+        <button id="btn-story-next" class="btn btn-primary hidden">繼續 ›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MAP SCREEN (MAIN GAME)                       -->
+  <!-- ============================================ -->
+  <div id="screen-map" class="screen">
+    <!-- Top HUD Bar -->
+    <div class="hud-bar">
+      <div class="hud-left">
+        <div class="hud-avatar">
+          <div class="avatar-frame">
+            <div class="avatar-img" id="hud-avatar-img">🧙</div>
+          </div>
+          <span class="hud-level" id="hud-level">Lv.1</span>
+        </div>
+        <div class="hud-bars">
+          <div class="bar-group">
+            <span class="bar-label">HP</span>
+            <div class="bar bar-hp">
+              <div class="bar-fill" id="hud-hp-fill" style="width: 100%"></div>
+            </div>
+            <span class="bar-text" id="hud-hp-text">100/100</span>
+          </div>
+          <div class="bar-group">
+            <span class="bar-label">EXP</span>
+            <div class="bar bar-exp">
+              <div class="bar-fill" id="hud-exp-fill" style="width: 0%"></div>
+            </div>
+            <span class="bar-text" id="hud-exp-text">0/100</span>
+          </div>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-currency">
+          <span class="currency-icon">🪙</span>
+          <span id="hud-gold">0</span>
+        </div>
+        <div class="hud-currency">
+          <span class="currency-icon">💎</span>
+          <span id="hud-diamonds">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map-container" class="map-container"></div>
+
+    <!-- Floating Action Button -->
+    <button id="fab-action" class="fab" aria-label="快速行動">
+      <span class="fab-icon">⚡</span>
+    </button>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-screen="screen-map">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">地圖</span>
+      </button>
+      <button class="nav-item" data-screen="screen-quest">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">任務</span>
+      </button>
+      <button class="nav-item" data-screen="screen-inventory">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">背包</span>
+      </button>
+      <button class="nav-item" data-screen="screen-codex">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">圖鑑</span>
+      </button>
+      <button class="nav-item" data-screen="screen-settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">更多</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- QUEST LIST SCREEN                            -->
+  <!-- ============================================ -->
+  <div id="screen-quest" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-map">‹</button>
+      <h2 class="screen-title">任務</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="quest-main">主線</button>
+      <button class="tab" data-tab="quest-daily">每日</button>
+      <button class="tab" data-tab="quest-weekly">週常</button>
+      <button class="tab" data-tab="quest-special">特殊</button>
+    </div>
+
+    <div class="screen-body">
+      <div id="quest-main" class="tab-content active">
+        <div class="quest-list" id="quest-list-main"></div>
+      </div>
+      <div id="quest-daily" class="tab-content">
+        <div class="quest-list" id="quest-list-daily"></div>
+      </div>
+      <div id="quest-weekly" class="tab-content">
+        <div class="quest-list" id="quest-list-weekly"></div>
+      </div>
+      <div id="quest-special" class="tab-content">
+        <div class="quest-list" id="quest-list-special"></div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-item" data-screen="screen-map">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">地圖</span>
+      </button>
+      <button class="nav-item active" data-screen="screen-quest">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">任務</span>
+      </button>
+      <button class="nav-item" data-screen="screen-inventory">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">背包</span>
+      </button>
+      <button class="nav-item" data-screen="screen-codex">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">圖鑑</span>
+      </button>
+      <button class="nav-item" data-screen="screen-settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">更多</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- ACTIVE QUEST SCREEN                          -->
+  <!-- ============================================ -->
+  <div id="screen-quest-active" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-quest">‹</button>
+      <h2 class="screen-title" id="active-quest-title">任務進行中</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="screen-body quest-active-body">
+      <div class="quest-objective" id="quest-objective">
+        <p class="quest-objective-text"></p>
+      </div>
+
+      <div class="quest-interaction-area" id="quest-interaction">
+        <!-- Dynamically filled: camera view, shake indicator, AR overlay, etc. -->
+        <div class="interaction-placeholder">
+          <span class="interaction-icon">📡</span>
+          <p>等待感應互動...</p>
+        </div>
+      </div>
+
+      <div class="quest-progress">
+        <div class="bar bar-quest">
+          <div class="bar-fill" id="quest-progress-fill" style="width: 0%"></div>
+        </div>
+        <span class="quest-progress-text" id="quest-progress-text">0%</span>
+      </div>
+
+      <div class="quest-active-actions">
+        <button id="btn-quest-cancel" class="btn btn-danger">放棄任務</button>
+        <button id="btn-quest-complete" class="btn btn-primary btn-glow" disabled>完成任務</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- BATTLE SCREEN                                -->
+  <!-- ============================================ -->
+  <div id="screen-battle" class="screen">
+    <div class="battle-bg"></div>
+
+    <!-- Turn Indicator -->
+    <div class="battle-turn" id="battle-turn">你的回合</div>
+
+    <!-- Enemy Area -->
+    <div class="battle-enemy">
+      <div class="battle-enemy-info">
+        <span class="battle-enemy-name" id="enemy-name">暗影怪</span>
+        <span class="battle-enemy-level" id="enemy-level">Lv.1</span>
+      </div>
+      <div class="bar bar-hp bar-enemy">
+        <div class="bar-fill" id="enemy-hp-fill" style="width: 100%"></div>
+      </div>
+      <div class="battle-enemy-sprite" id="enemy-sprite">👹</div>
+    </div>
+
+    <!-- Player Party Area -->
+    <div class="battle-player">
+      <div class="battle-player-sprite" id="player-animal-sprite">🦢</div>
+      <div class="battle-player-info">
+        <span class="battle-player-name" id="player-animal-name">守護天鵝</span>
+        <div class="bar bar-hp">
+          <div class="bar-fill" id="player-animal-hp-fill" style="width: 100%"></div>
+        </div>
+        <span class="bar-text" id="player-animal-hp-text">100/100</span>
+      </div>
+    </div>
+
+    <!-- Battle Log -->
+    <div class="battle-log" id="battle-log">
+      <p>戰鬥開始！</p>
+    </div>
+
+    <!-- Battle Actions -->
+    <div class="battle-actions">
+      <button class="btn btn-battle btn-attack" data-action="attack">⚔️ 攻擊</button>
+      <button class="btn btn-battle btn-skill" data-action="skill">✨ 技能</button>
+      <button class="btn btn-battle btn-item" data-action="item">🧪 道具</button>
+      <button class="btn btn-battle btn-flee" data-action="flee">💨 逃跑</button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- INVENTORY SCREEN                             -->
+  <!-- ============================================ -->
+  <div id="screen-inventory" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-map">‹</button>
+      <h2 class="screen-title">背包</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="inv-items">道具</button>
+      <button class="tab" data-tab="inv-equip">裝備</button>
+      <button class="tab" data-tab="inv-materials">材料</button>
+    </div>
+
+    <div class="screen-body">
+      <div id="inv-items" class="tab-content active">
+        <div class="inventory-grid" id="inventory-grid-items"></div>
+      </div>
+      <div id="inv-equip" class="tab-content">
+        <div class="inventory-grid" id="inventory-grid-equip"></div>
+      </div>
+      <div id="inv-materials" class="tab-content">
+        <div class="inventory-grid" id="inventory-grid-materials"></div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-item" data-screen="screen-map">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">地圖</span>
+      </button>
+      <button class="nav-item" data-screen="screen-quest">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">任務</span>
+      </button>
+      <button class="nav-item active" data-screen="screen-inventory">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">背包</span>
+      </button>
+      <button class="nav-item" data-screen="screen-codex">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">圖鑑</span>
+      </button>
+      <button class="nav-item" data-screen="screen-settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">更多</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CODEX / ENCYCLOPEDIA SCREEN                  -->
+  <!-- ============================================ -->
+  <div id="screen-codex" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-map">‹</button>
+      <h2 class="screen-title">圖鑑</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="codex-animals">動物</button>
+      <button class="tab" data-tab="codex-monsters">怪物</button>
+      <button class="tab" data-tab="codex-locations">據點</button>
+    </div>
+
+    <div class="screen-body">
+      <div id="codex-animals" class="tab-content active">
+        <div class="codex-grid" id="codex-grid-animals"></div>
+      </div>
+      <div id="codex-monsters" class="tab-content">
+        <div class="codex-grid" id="codex-grid-monsters"></div>
+      </div>
+      <div id="codex-locations" class="tab-content">
+        <div class="codex-grid" id="codex-grid-locations"></div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-item" data-screen="screen-map">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">地圖</span>
+      </button>
+      <button class="nav-item" data-screen="screen-quest">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">任務</span>
+      </button>
+      <button class="nav-item" data-screen="screen-inventory">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">背包</span>
+      </button>
+      <button class="nav-item active" data-screen="screen-codex">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">圖鑑</span>
+      </button>
+      <button class="nav-item" data-screen="screen-settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">更多</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PROFILE SCREEN                               -->
+  <!-- ============================================ -->
+  <div id="screen-profile" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-settings">‹</button>
+      <h2 class="screen-title">個人檔案</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="screen-body">
+      <div class="profile-hero">
+        <div class="profile-avatar">
+          <div class="avatar-frame avatar-frame-lg">
+            <div class="avatar-img" id="profile-avatar-img">🧙</div>
+          </div>
+        </div>
+        <h3 class="profile-name" id="profile-name">守護者</h3>
+        <p class="profile-title" id="profile-title">初心冒險者</p>
+        <span class="profile-level" id="profile-level">Lv.1</span>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="stat-quests">0</span>
+          <span class="stat-label">完成任務</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-battles">0</span>
+          <span class="stat-label">勝利戰鬥</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-animals">0</span>
+          <span class="stat-label">收集動物</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-steps">0</span>
+          <span class="stat-label">探索步數</span>
+        </div>
+      </div>
+
+      <div class="section-title">守護夥伴</div>
+      <div class="animal-team" id="profile-animal-team">
+        <!-- Populated dynamically -->
+      </div>
+
+      <div class="section-title">成就徽章</div>
+      <div class="achievement-grid" id="profile-achievements">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- RANKING SCREEN                               -->
+  <!-- ============================================ -->
+  <div id="screen-ranking" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-settings">‹</button>
+      <h2 class="screen-title">排行榜</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="rank-level">等級</button>
+      <button class="tab" data-tab="rank-battle">戰鬥</button>
+      <button class="tab" data-tab="rank-codex">圖鑑</button>
+      <button class="tab" data-tab="rank-quest">任務</button>
+    </div>
+
+    <div class="screen-body">
+      <div id="rank-level" class="tab-content active">
+        <div class="rank-list" id="rank-list-level"></div>
+      </div>
+      <div id="rank-battle" class="tab-content">
+        <div class="rank-list" id="rank-list-battle"></div>
+      </div>
+      <div id="rank-codex" class="tab-content">
+        <div class="rank-list" id="rank-list-codex"></div>
+      </div>
+      <div id="rank-quest" class="tab-content">
+        <div class="rank-list" id="rank-list-quest"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SHOP SCREEN                                  -->
+  <!-- ============================================ -->
+  <div id="screen-shop" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-settings">‹</button>
+      <h2 class="screen-title">商店</h2>
+      <div class="hud-currency hud-currency-header">
+        <span class="currency-icon">🪙</span>
+        <span id="shop-gold">0</span>
+        <span class="currency-icon" style="margin-left: 12px">💎</span>
+        <span id="shop-diamonds">0</span>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="shop-items">道具</button>
+      <button class="tab" data-tab="shop-diamonds">鑽石</button>
+      <button class="tab" data-tab="shop-bundles">禮包</button>
+    </div>
+
+    <div class="screen-body">
+      <div id="shop-items" class="tab-content active">
+        <div class="shop-grid" id="shop-grid-items"></div>
+      </div>
+      <div id="shop-diamonds" class="tab-content">
+        <div class="shop-grid" id="shop-grid-diamonds"></div>
+      </div>
+      <div id="shop-bundles" class="tab-content">
+        <div class="shop-grid" id="shop-grid-bundles"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SETTINGS / MORE SCREEN                       -->
+  <!-- ============================================ -->
+  <div id="screen-settings" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-map">‹</button>
+      <h2 class="screen-title">更多</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="screen-body">
+      <div class="menu-group">
+        <button class="menu-item" data-screen="screen-profile">
+          <span class="menu-icon">👤</span>
+          <span class="menu-text">個人檔案</span>
+          <span class="menu-arrow">›</span>
+        </button>
+        <button class="menu-item" data-screen="screen-ranking">
+          <span class="menu-icon">🏆</span>
+          <span class="menu-text">排行榜</span>
+          <span class="menu-arrow">›</span>
+        </button>
+        <button class="menu-item" data-screen="screen-shop">
+          <span class="menu-icon">🏪</span>
+          <span class="menu-text">商店</span>
+          <span class="menu-arrow">›</span>
+        </button>
+        <button class="menu-item" id="menu-friends">
+          <span class="menu-icon">👥</span>
+          <span class="menu-text">好友</span>
+          <span class="menu-arrow">›</span>
+        </button>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-item menu-toggle">
+          <span class="menu-icon">🔊</span>
+          <span class="menu-text">音效</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-sound" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="menu-item menu-toggle">
+          <span class="menu-icon">🔔</span>
+          <span class="menu-text">通知</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-notifications" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="menu-item menu-toggle">
+          <span class="menu-icon">📍</span>
+          <span class="menu-text">定位服務</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-location" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <button class="menu-item" id="menu-account">
+          <span class="menu-icon">🔑</span>
+          <span class="menu-text">帳號資訊</span>
+          <span class="menu-arrow">›</span>
+        </button>
+        <button class="menu-item" id="menu-credits">
+          <span class="menu-icon">📄</span>
+          <span class="menu-text">製作團隊</span>
+          <span class="menu-arrow">›</span>
+        </button>
+        <button class="menu-item" id="menu-support">
+          <span class="menu-icon">💬</span>
+          <span class="menu-text">客服支援</span>
+          <span class="menu-arrow">›</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-item" data-screen="screen-map">
+        <span class="nav-icon">🗺️</span>
+        <span class="nav-label">地圖</span>
+      </button>
+      <button class="nav-item" data-screen="screen-quest">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">任務</span>
+      </button>
+      <button class="nav-item" data-screen="screen-inventory">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">背包</span>
+      </button>
+      <button class="nav-item" data-screen="screen-codex">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">圖鑑</span>
+      </button>
+      <button class="nav-item active" data-screen="screen-settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">更多</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- MODALS                                       -->
+  <!-- ============================================ -->
+
+  <!-- Generic Dialog Modal -->
+  <div id="modal-dialog" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3 class="modal-title" id="dialog-title">提示</h3>
+      <p class="modal-body" id="dialog-body">訊息內容</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="dialog-cancel">取消</button>
+        <button class="btn btn-primary" id="dialog-confirm">確認</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reward Modal -->
+  <div id="modal-reward" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-reward-content">
+      <div class="reward-glow"></div>
+      <h3 class="modal-title">獲得獎勵！</h3>
+      <div class="reward-items" id="reward-items">
+        <!-- Dynamically populated -->
+      </div>
+      <button class="btn btn-primary btn-glow" id="reward-confirm">太好了！</button>
+    </div>
+  </div>
+
+  <!-- Level Up Modal -->
+  <div id="modal-levelup" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-levelup-content">
+      <div class="levelup-effect"></div>
+      <h3 class="modal-title">等級提升！</h3>
+      <div class="levelup-level" id="levelup-level">Lv.2</div>
+      <div class="levelup-unlocks" id="levelup-unlocks">
+        <!-- Dynamically populated -->
+      </div>
+      <button class="btn btn-primary btn-glow" id="levelup-confirm">繼續冒險</button>
+    </div>
+  </div>
+
+  <!-- Animal Detail Modal -->
+  <div id="modal-animal-detail" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-detail-content">
+      <button class="modal-close" id="animal-detail-close">&times;</button>
+      <div class="detail-sprite" id="animal-detail-sprite">🦢</div>
+      <h3 class="modal-title" id="animal-detail-name">守護天鵝</h3>
+      <div class="detail-rarity" id="animal-detail-rarity">
+        <span class="rarity-star">★</span><span class="rarity-star">★</span><span class="rarity-star">★</span>
+      </div>
+      <p class="detail-desc" id="animal-detail-desc">描述文字</p>
+      <div class="detail-stats" id="animal-detail-stats">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="detail-skills" id="animal-detail-skills">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="animal-detail-select">選為夥伴</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Detail Modal -->
+  <div id="modal-location-detail" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-detail-content">
+      <button class="modal-close" id="location-detail-close">&times;</button>
+      <div class="detail-image" id="location-detail-image"></div>
+      <h3 class="modal-title" id="location-detail-name">據點名稱</h3>
+      <p class="detail-desc" id="location-detail-desc">據點描述</p>
+      <div class="location-info" id="location-detail-info">
+        <!-- Distance, status, etc. -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="location-detail-navigate">前往探索</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Camera Modal -->
+  <div id="modal-camera" class="modal modal-fullscreen">
+    <div class="camera-overlay">
+      <div class="camera-header">
+        <button class="btn btn-ghost camera-close" id="camera-close">&times;</button>
+        <span class="camera-title">拍攝目標</span>
+      </div>
+      <video id="camera-video" autoplay playsinline></video>
+      <canvas id="camera-canvas" class="hidden"></canvas>
+      <div class="camera-crosshair"></div>
+      <div class="camera-controls">
+        <button class="btn-camera-capture" id="camera-capture" aria-label="拍攝">
+          <span class="capture-ring"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item Detail Modal (for inventory) -->
+  <div id="modal-item-detail" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="item-detail-close">&times;</button>
+      <div class="detail-sprite" id="item-detail-icon">🧪</div>
+      <h3 class="modal-title" id="item-detail-name">道具名稱</h3>
+      <span class="item-detail-rarity" id="item-detail-rarity">普通</span>
+      <p class="detail-desc" id="item-detail-desc">道具描述</p>
+      <div class="item-detail-quantity">
+        持有：<span id="item-detail-quantity">0</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="item-detail-use">使用</button>
+        <button class="btn btn-secondary" id="item-detail-discard">丟棄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- TOAST NOTIFICATIONS                          -->
+  <!-- ============================================ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ============================================ -->
+  <!-- LOADING OVERLAY                              -->
+  <!-- ============================================ -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">載入中...</p>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SCRIPTS                                      -->
+  <!-- ============================================ -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
