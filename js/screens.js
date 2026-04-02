@@ -247,26 +247,32 @@ export function renderShop() {
       </div>
     `).join('');
 
-    itemsGrid.querySelectorAll('.shop-buy').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const card = e.target.closest('.shop-card');
-        const itemId = card.dataset.itemId;
-        const item = ITEMS.find(i => i.id === itemId);
-        if (!item) return;
+    _bindShopBuy(itemsGrid);
+  }
 
-        if (item.goldPrice > 0 && player.spendGold(item.goldPrice)) {
-          player.addItem(itemId, 1);
-          ui.toast(`購買了 ${item.name}`, 'success');
-          ui.updateHUD();
-        } else if (item.diamondPrice > 0 && player.spendDiamonds(item.diamondPrice)) {
-          player.addItem(itemId, 1);
-          ui.toast(`購買了 ${item.name}`, 'success');
-          ui.updateHUD();
-        } else {
-          ui.toast('金幣或鑽石不足', 'error');
-        }
-      });
-    });
+  // 裝備商城
+  const equipGrid = document.getElementById('shop-grid-equip');
+  if (equipGrid) {
+    const equipItems = ITEMS.filter(i => (i.goldPrice > 0 || i.diamondPrice > 0) && i.type === 'equipment');
+    equipGrid.innerHTML = equipItems.map(item => `
+      <div class="shop-card rarity-border-${item.rarity}" data-item-id="${item.id}">
+        <div class="shop-icon">${item.rarity === 'SSR' ? '🌟' : item.rarity === 'SR' ? '⚔️' : '🛡️'}</div>
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-rarity rarity-${item.rarity}">${item.rarity}</div>
+        <div class="shop-desc">${item.effect}</div>
+        <div class="shop-price">
+          ${item.goldPrice > 0 ? `<span>🪙 ${item.goldPrice}</span>` : ''}
+          ${item.diamondPrice > 0 ? `<span>💎 ${item.diamondPrice}</span>` : ''}
+        </div>
+        <button class="btn btn-primary btn-sm shop-buy">購買</button>
+      </div>
+    `).join('');
+
+    if (equipItems.length === 0) {
+      equipGrid.innerHTML = '<div class="empty-state"><p>暫無裝備出售</p></div>';
+    }
+
+    _bindShopBuy(equipGrid);
   }
 
   // 禮包
@@ -318,6 +324,31 @@ export function renderShop() {
       });
     });
   }
+}
+
+function _bindShopBuy(container) {
+  container.querySelectorAll('.shop-buy').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const card = e.target.closest('.shop-card');
+      const itemId = card.dataset.itemId;
+      const item = ITEMS.find(i => i.id === itemId);
+      if (!item) return;
+
+      if (item.goldPrice > 0 && player.spendGold(item.goldPrice)) {
+        player.addItem(itemId, 1);
+        ui.toast(`購買了 ${item.name}`, 'success');
+        ui.updateHUD();
+        renderInventory();
+      } else if (item.diamondPrice > 0 && player.spendDiamonds(item.diamondPrice)) {
+        player.addItem(itemId, 1);
+        ui.toast(`購買了 ${item.name}`, 'success');
+        ui.updateHUD();
+        renderInventory();
+      } else {
+        ui.toast('金幣或鑽石不足', 'error');
+      }
+    });
+  });
 }
 
 // ════════════════════════════════

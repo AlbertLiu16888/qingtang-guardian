@@ -11,7 +11,7 @@
   <meta name="description" content="青塘園守護者：光明之戰 - 在真實的青塘園中展開你的冒險旅程">
   <link rel="apple-touch-icon" href="icons/icon-192x192.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
 
@@ -474,6 +474,7 @@
 
     <div class="tab-bar">
       <button class="tab active" data-tab="shop-items">道具</button>
+      <button class="tab" data-tab="shop-equip">裝備</button>
       <button class="tab" data-tab="shop-diamonds">鑽石</button>
       <button class="tab" data-tab="shop-bundles">禮包</button>
     </div>
@@ -482,11 +483,118 @@
       <div id="shop-items" class="tab-content active">
         <div class="shop-grid" id="shop-grid-items"></div>
       </div>
+      <div id="shop-equip" class="tab-content">
+        <div class="shop-grid" id="shop-grid-equip"></div>
+      </div>
       <div id="shop-diamonds" class="tab-content">
         <div class="shop-grid" id="shop-grid-diamonds"></div>
       </div>
       <div id="shop-bundles" class="tab-content">
         <div class="shop-grid" id="shop-grid-bundles"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- GAME GUIDE SCREEN                            -->
+  <!-- ============================================ -->
+  <div id="screen-guide" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" data-back="screen-settings">‹</button>
+      <h2 class="screen-title">遊戲指引</h2>
+      <div class="screen-header-spacer"></div>
+    </div>
+
+    <div class="screen-body" style="padding:16px">
+      <div class="guide-section">
+        <h3>🎮 遊戲簡介</h3>
+        <p>你是被選中的「光明守護者」，任務是前往青塘園各地點，完成守護任務、擊敗暗影怪物、恢復光明值！</p>
+      </div>
+
+      <div class="guide-section">
+        <h3>📋 如何進行任務</h3>
+        <ol>
+          <li>點擊底部 <strong>「任務」</strong> 頁籤查看可用任務</li>
+          <li>點擊任務卡片，選擇 <strong>「直接挑戰」</strong> 開始</li>
+          <li>完成所有目標後，點擊 <strong>「完成任務」</strong> 領取獎勵</li>
+        </ol>
+        <div class="guide-tip">
+          <strong>💡 到場加倍：</strong>實際前往青塘園並開啟GPS，任務獎勵翻倍！
+        </div>
+      </div>
+
+      <div class="guide-section">
+        <h3>⚔️ 戰鬥系統</h3>
+        <ol>
+          <li>在任務中點擊 <strong>「搜索敵人戰鬥」</strong> 按鈕</li>
+          <li>回合制戰鬥：選擇攻擊、技能、道具或逃跑</li>
+          <li>勝利獲得：<strong>經驗值、金幣、裝備掉落</strong></li>
+          <li>精英和Boss掉落更好的裝備！</li>
+        </ol>
+      </div>
+
+      <div class="guide-section">
+        <h3>📷 拍照任務</h3>
+        <ol>
+          <li>點擊 <strong>「開啟相機拍攝」</strong> 按鈕</li>
+          <li>對準<strong>任何物體</strong>（風景、動物、文字皆可）</li>
+          <li>點擊拍攝按鈕，<strong>拍攝即完成</strong></li>
+          <li>沒有相機？點擊 <strong>「無相機？直接完成」</strong></li>
+        </ol>
+      </div>
+
+      <div class="guide-section">
+        <h3>📳 搖晃/充能任務</h3>
+        <ol>
+          <li>搖晃手機或<strong>直接點擊「點擊充能」按鈕</strong></li>
+          <li>達到目標次數即完成</li>
+        </ol>
+      </div>
+
+      <div class="guide-section">
+        <h3>🛡️ 裝備系統</h3>
+        <ul>
+          <li><strong>獲取方式：</strong>打怪掉落、商店購買、任務獎勵</li>
+          <li><strong>稀有度：</strong>N → R → SR → SSR</li>
+          <li>精英怪掉落R級裝備，Boss掉落SR/SSR級</li>
+          <li>商店可用金幣購買基礎裝備</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🪙 金幣用途</h3>
+        <ul>
+          <li>商店購買藥水、裝備、道具</li>
+          <li>金幣來源：打怪、完成任務</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>📅 每日/每週任務</h3>
+        <ul>
+          <li><strong>每日任務：</strong>每天重置，可重複挑戰</li>
+          <li><strong>每週任務：</strong>每週重置，獎勵豐厚</li>
+          <li>每日任務是快速升級的最佳途徑！</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🗺️ 地圖與據點</h3>
+        <ul>
+          <li>青塘園共有 <strong>14個據點</strong></li>
+          <li>每個據點有獨特的守護動物和Boss</li>
+          <li>接近據點時可觸發隨機戰鬥</li>
+          <li>戰勝怪物會恢復該據點的光明值</li>
+        </ul>
+      </div>
+
+      <div class="guide-section">
+        <h3>🔘 操作按鈕說明</h3>
+        <ul>
+          <li><strong>⚡ 閃電按鈕（右下）：</strong>快速行動，在據點附近搜索敵人</li>
+          <li><strong>底部導航：</strong>地圖、任務、背包、圖鑑、更多</li>
+          <li><strong>所有互動按鈕都可直接點擊完成</strong>，無需特殊設備</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -516,6 +624,11 @@
         <button class="menu-item" data-screen="screen-shop">
           <span class="menu-icon">🏪</span>
           <span class="menu-text">商店</span>
+          <span class="menu-arrow">›</span>
+        </button>
+        <button class="menu-item" data-screen="screen-guide">
+          <span class="menu-icon">📖</span>
+          <span class="menu-text">遊戲指引</span>
           <span class="menu-arrow">›</span>
         </button>
         <button class="menu-item" id="menu-friends">

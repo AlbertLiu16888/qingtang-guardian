@@ -7,6 +7,33 @@ import { ANIMALS } from './data/animals.js';
 import { player } from './player.js';
 import { ui } from './ui.js';
 
+// Equipment drop table by monster type
+const EQUIP_DROPS = {
+  minion: [
+    { id: 'I200', name: '守護者初始護腕', chance: 0.15 },
+    { id: 'I103', name: '生命藥水（小）', chance: 0.30 },
+  ],
+  elite: [
+    { id: 'I201', name: '光之護盾', chance: 0.20 },
+    { id: 'I202', name: '疾風之靴', chance: 0.20 },
+    { id: 'I104', name: '生命藥水（中）', chance: 0.30 },
+    { id: 'I010', name: '精英徽章', chance: 0.50 },
+  ],
+  boss: [
+    { id: 'I203', name: '大地之鎧', chance: 0.25 },
+    { id: 'I204', name: '水流之杖', chance: 0.25 },
+    { id: 'I105', name: '生命藥水（大）', chance: 0.40 },
+    { id: 'I011', name: 'Boss結晶', chance: 0.60 },
+    { id: 'I020', name: '稀有裝備箱', chance: 0.10 },
+  ],
+  worldboss: [
+    { id: 'I205', name: '聖光之翼', chance: 0.15 },
+    { id: 'I206', name: '深淵克星', chance: 0.10 },
+    { id: 'I021', name: '傳說裝備箱', chance: 0.20 },
+    { id: 'I011', name: 'Boss結晶', chance: 0.80 },
+  ],
+};
+
 class BattleManager {
   constructor() {
     this.active = false;
@@ -20,6 +47,7 @@ class BattleManager {
     this.skillCooldown = 0;
     this.log = [];
     this._onEndCallback = null;
+    this.lastDefeatedMonster = null;
   }
 
   // ── 開始戰鬥 ──
@@ -231,6 +259,7 @@ class BattleManager {
   _victory() {
     this._addLog(`🎉 擊敗了 ${this.enemy.name}！`);
     this._updateBattleUI();
+    this.lastDefeatedMonster = this.enemy;
 
     player.data.stats.battlesWon++;
     player.data.stats.monstersDefeated++;
@@ -242,7 +271,7 @@ class BattleManager {
     const expReward = this.enemy.level * 20 + (this.enemy.type === 'boss' ? 200 : 50);
     const goldReward = this.enemy.level * 10 + Math.floor(Math.random() * 50);
 
-    // 掉落物
+    // 掉落物（怪物定義 + 裝備掉落表）
     const drops = [];
     if (this.enemy.drops) {
       this.enemy.drops.forEach(drop => {
@@ -251,6 +280,13 @@ class BattleManager {
         }
       });
     }
+    // 裝備掉落
+    const equipTable = EQUIP_DROPS[this.enemy.type] || EQUIP_DROPS.minion;
+    equipTable.forEach(eq => {
+      if (Math.random() < eq.chance) {
+        drops.push({ name: eq.name, qty: 1, id: eq.id });
+      }
+    });
 
     setTimeout(async () => {
       const rewards = {
@@ -380,6 +416,19 @@ class BattleManager {
     dmgEl.textContent = `-${damage}`;
     container.appendChild(dmgEl);
     setTimeout(() => dmgEl.remove(), 1000);
+  }
+
+  // ── 依類型隨機遭遇 ──
+  getRandomEncounterByType(type) {
+    const pool = MONSTERS.filter(m =>
+      m.type === type && player.data.level >= m.levelRange[0]
+    );
+    if (pool.length === 0) {
+      // fallback to any available
+      const any = MONSTERS.filter(m => player.data.level >= m.levelRange[0]);
+      return any.length > 0 ? any[Math.floor(Math.random() * any.length)].id : 'M01';
+    }
+    return pool[Math.floor(Math.random() * pool.length)].id;
   }
 
   // ── 隨機遭遇 ──
