@@ -1599,6 +1599,39 @@ input, textarea, select {
   pointer-events: auto;
 }
 
+/* Quest accept dialog overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) + 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-overlay > .modal {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  pointer-events: auto;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 380px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
 .modal-backdrop {
   position: absolute;
   inset: 0;
